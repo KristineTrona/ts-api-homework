@@ -4,9 +4,9 @@ import Game from './entity';
 const colors = ["red", "blue", "green", "yellow", "magenta"]
 
 const defaultBoard = [
-	['o', 'o', 'o'],
-	['o', 'o', 'o'],
-	['o', 'o', 'o']
+	["o", "o", "o"],
+	["o", "o", "o"],
+	["o", "o", "o"]
 ]
 
 const moves = (board1, board2) => 
@@ -54,14 +54,13 @@ export default class GameController {
         
         else if(color && !colors.includes(color))
           throw new Error("Please select a valid colour: red, blue, green, yellow or magenta ")
-       
-        else if(board && moves(board, game.board)>1)
+        
+        else if(board && moves (board, game.board)>1)
           throw new BadRequestError("Make only one move at the time!")
 
         game.name = name
         game.color = color
         game.board = board
-
         return Game.merge(game, update).save()
       }
     }

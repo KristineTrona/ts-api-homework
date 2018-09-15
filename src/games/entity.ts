@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column} from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
-import { IsString, IsJSON } from '../../node_modules/class-validator';
+import { IsString, IsJSON} from '../../node_modules/class-validator';
 
 @Entity()
 export default class Game extends BaseEntity {
