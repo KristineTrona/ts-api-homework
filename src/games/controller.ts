@@ -1,12 +1,19 @@
-import { JsonController, Get, Post, HttpCode, BodyParam, Body, Param, Put, NotFoundError} from 'routing-controllers'
+import { JsonController, Get, Post, HttpCode, BodyParam, Body, Param, Put, NotFoundError, BadRequestError} from 'routing-controllers'
 import Game from './entity';
 
 const colors = ["red", "blue", "green", "yellow", "magenta"]
+
 const defaultBoard = [
 	['o', 'o', 'o'],
 	['o', 'o', 'o'],
 	['o', 'o', 'o']
 ]
+
+const moves = (board1, board2) => 
+  board1
+    .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
+    .reduce((a, b) => a.concat(b))
+    .length
 
 @JsonController()
 export default class GameController {
@@ -37,17 +44,19 @@ export default class GameController {
         @Param("id") id: number,
         @BodyParam("name") name: string,
         @BodyParam("color") color: string,
-        @BodyParam("board") board: JSON,
+        @BodyParam("board") board: object,
         @Body() update: Partial<Game>
       ) {
       
         const game = await Game.findOne(id)
-        if(!game){
+        if(!game)
           throw new NotFoundError("Cannot find the game")
-        }
-        else if(color && !colors.includes(color)){
+        
+        else if(color && !colors.includes(color))
           throw new Error("Please select a valid colour: red, blue, green, yellow or magenta ")
-        }
+       
+        else if(board && moves(board, game.board)>1)
+          throw new BadRequestError("Make only one move at the time!")
 
         game.name = name
         game.color = color
@@ -56,15 +65,5 @@ export default class GameController {
         return Game.merge(game, update).save()
       }
     }
-
-
-
-
-    // @Get('/items/:id')
-    // getItem(
-    //     @Param('id') id: number
-    // ) {
-    //     return Item.findOne(id)
-    // }
 
 
