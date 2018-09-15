@@ -27,7 +27,7 @@ export default class GameController {
 
         newGame.name = name
         newGame.color = colors[Math.floor((Math.random()*colors.length-1)+1)]
-        newGame.board = JSON.parse(JSON.stringify(defaultBoard))
+        newGame.board = defaultBoard
 
       return newGame.save()
     }
