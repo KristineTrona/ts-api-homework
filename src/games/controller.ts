@@ -1,23 +1,36 @@
-import { JsonController, Get, Post, HttpCode, Body} from 'routing-controllers'
+import { JsonController, Get, Post, HttpCode, BodyParam} from 'routing-controllers'
 import Game from './entity';
 
+const colors = ["red", "blue", "green", "yellow", "magenta"]
+
+const defaultBoard = [
+	['o', 'o', 'o'],
+	['o', 'o', 'o'],
+	['o', 'o', 'o']
+]
 
 @JsonController()
 export default class GameController {
 
     
     @Get('/games')
-    async allItems () {
+    async allGames () {
       const games = await Game.find()
       return { games } 
     }
 
     @Post('/games')
     @HttpCode(201)
-    createItem(
-      @Body() game: Game
+    createGame(
+      @BodyParam("name") name: string
     ) {
-      return game.save()
+        const newGame = new Game
+
+        newGame.name = name
+        newGame.color = colors[Math.floor((Math.random()*colors.length-1))]
+        newGame.board = JSON.parse(JSON.stringify(defaultBoard))
+
+      return newGame.save()
     }
 
 
